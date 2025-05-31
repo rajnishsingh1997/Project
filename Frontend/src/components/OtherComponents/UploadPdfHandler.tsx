@@ -31,23 +31,64 @@ const UploadPdfHandler = () => {
     },
   });
 
-  const handleDocChange = (e: React.ChangeEvent<HTMLInputElement>) => {};
+  const validateFile = (file: File, schema: any, field: keyof ErrorType) => {
+    const result = schema.safeParse({ file });
+    if (!result.success) {
+      setError((prevError) => ({
+        ...prevError,
+        [field]: result.error.errors[0].message,
+      }));
+      return false;
+    } else {
+      setError((prevError) => ({
+        ...prevError,
+        [field]: undefined,
+      }));
+      return true;
+    }
+  };
 
+  const handleDocChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const isValid = validateFile(file, DOCUMENT_SCHEMA, "doc_upload");
+      if (isValid) setUploadedFile(file);
+    }
+  };
   function onSubmit(values: z.infer<typeof DOCUMENT_SCHEMA>) {
     console.log(values);
   }
 
-  return  (
+  return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="username"
+          name="file"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                {/* <Input type="file" placeholder="shadcn" {...field} /> */}
+                <Input
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const isValid = validateFile(
+                        file,
+                        DOCUMENT_SCHEMA,
+                        "doc_upload"
+                      );
+                      if (isValid) {
+                        setUploadedFile(file);
+                        field.onChange(file);
+                      } else {
+                        field.onChange(undefined);
+                      }
+                    }
+                  }}
+                  type="file"
+                />
               </FormControl>
               <FormDescription>
                 This is your public display name.
