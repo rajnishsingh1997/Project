@@ -48,15 +48,8 @@ const UploadPdfHandler = () => {
     }
   };
 
-  const handleDocChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const isValid = validateFile(file, DOCUMENT_SCHEMA, "doc_upload");
-      if (isValid) setUploadedFile(file);
-    }
-  };
   function onSubmit(values: z.infer<typeof DOCUMENT_SCHEMA>) {
-    console.log(values);
+    console.log(uploadedFile);
   }
 
   return (
