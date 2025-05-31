@@ -54,16 +54,21 @@ const UploadPdfHandler = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 p-6 bg-white shadow-md rounded-lg max-w-md mx-auto"
+      >
         <FormField
           control={form.control}
           name="file"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel className="text-base font-semibold">
+                Upload your PDF here
+              </FormLabel>
               <FormControl>
-                {/* <Input type="file" placeholder="shadcn" {...field} /> */}
                 <Input
+                  className="cursor-pointer"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
@@ -81,16 +86,20 @@ const UploadPdfHandler = () => {
                     }
                   }}
                   type="file"
+                  accept="application/pdf"
                 />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+              {error.doc_upload && (
+                <p className="text-sm text-red-500 mt-1">{error.doc_upload}</p>
+              )}
+              <FormDescription className="text-gray-500"></FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-full">
+          Submit
+        </Button>
       </form>
     </Form>
   );
